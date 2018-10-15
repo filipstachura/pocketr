@@ -35,8 +35,9 @@ step2 <- function(consumer_key, code) {
 }
 
 response_to_bookmarks <- function(api_response) {
+  common_names <- api_response$list %>% purrr::map(names) %>% purrr::reduce(intersect)
   raw_bookmarks <- api_response$list %>%
-    purrr::keep(~ length(.) == 19) %>%
+    purrr::map(~ .[common_names]) %>%
     do.call(rbind.data.frame, .)
   raw_bookmarks
 }
